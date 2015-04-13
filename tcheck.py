@@ -11,6 +11,7 @@ http://techblog.ridewithvia.com/post/37118173720
 from __future__ import print_function
 
 import sys
+import struct
 
 from thrift import Thrift
 from thrift.transport import TSocket
@@ -77,6 +78,9 @@ def main():
   try:
     point.validate()
     print("String was accepted when int was expected", file=sys.stderr)
+    SerializeThriftMsg(point)
+  except struct.error as e:
+    print("struct error", file=sys.stderr)
   except TProtocol.TProtocolException as e:
     pass
 
@@ -93,8 +97,8 @@ def main():
   place = Place(name="wtanaka.com", location=Point(x=1.5, y=2.75),
       review=Point(x=1.5, y=2.75))
   place.validate()
-  print("Point was accepted when Review was expected", file=sys.stderr)
   SerializeThriftMsg(place)
+  print("Point was accepted when Review was expected", file=sys.stderr)
 
 if __name__ == "__main__":
    main()
